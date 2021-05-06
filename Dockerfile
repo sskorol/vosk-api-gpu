@@ -55,7 +55,7 @@ RUN cd /opt/kaldi/src && \
 	make -j $(nproc) online2 lm rnnlm
 
 RUN echo "[BUILDING VOSK] >>>" && \
-	git clone -b gpu --single-branch https://github.com/sskorol/vosk-api /opt/vosk-api
+	git clone https://github.com/alphacep/vosk-api.git /opt/vosk-api
 RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 make -j $(nproc) && \
 	python3 -m pip install --upgrade pip setuptools wheel cython && \
