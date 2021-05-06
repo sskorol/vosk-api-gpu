@@ -20,12 +20,12 @@ RUN apt-get update && \
 	pkg-config \
 	python3 \
 	python3-pip \
-        python3-wheel \
-        python3-cffi \
+	python3-wheel \
+	python3-cffi \
 	python3-dev \
-        python3-setuptools \
+	python3-setuptools \
 	zip \
-        wget && \ 
+	wget && \ 
 	rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8 --slave /usr/bin/g++ g++ /usr/bin/g++-8 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
