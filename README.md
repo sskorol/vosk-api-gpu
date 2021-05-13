@@ -1,6 +1,6 @@
 ### Vosk API - Docker/GPU
 
-Docker images for Jetson Nano / Xavier NX boards with CUDA support.
+Docker images with GPU for Jetson Nano / Xavier NX boards and PCs with NVIDIA cards.
 
 #### Usage
 
@@ -21,8 +21,8 @@ FROM sskorol/vosk-api:$TAG
 Clone sources and check a build file help:
 
 ```shell script
-git clone https://github.com/sskorol/vosk-api-jetson.git
-cd vosk-api-jetson
+git clone https://github.com/sskorol/vosk-api-gpu.git
+cd vosk-api-gpu
 ./build.sh -h
 ```
 
@@ -33,3 +33,21 @@ Then run it with required args depending on your platform, e.g.:
 ```
 
 You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-base) and [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml). 
+
+To build images for PC, use the following script:
+
+```shell script
+./build-pc.sh
+```
+
+It'll build 2 images: base and a sample Vosk server.
+
+To start a newly built container, run the following command:
+
+```shell script
+docker-compose up -d
+```
+
+Note that you have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder.
+
+Also make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
