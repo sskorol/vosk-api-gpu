@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  vosk:
+    image: sskorol/vosk-server:0.3.27-pc
+    networks:
+      - ai
+    volumes:
+      - ./model:/opt/vosk-server/model
+    environment:
+      - SAMPLE_RATE=16000
+      - PYTHONBUFFERED=1
+      - PYTHONENCODING=utf-8
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+networks:
+  ai:
+    driver: bridge
