@@ -51,3 +51,5 @@ docker-compose up -d
 Note that you have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder.
 
 Also make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
+
+Your host's CUDA version should match the container's. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.0 was used.
