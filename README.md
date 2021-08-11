@@ -16,6 +16,14 @@ Use it as a baseline in your app's Dockerfile:
 FROM sskorol/vosk-api:$TAG
 ```
 
+#### Build prerequisites
+
+You have to enable [nvidia runtime](https://github.com/dusty-nv/jetson-containers#docker-default-runtime) before building the images.
+
+In the case of Jetson boars, your JetPack should match the latest 32.5 version.
+
+For PCs make sure you met the following [prerequisites](https://medium.com/geekculture/installing-cudnn-and-cuda-toolkit-on-ubuntu-20-04-for-machine-learning-tasks-f41985fcf9b2).
+
 #### Building
 
 Clone sources and check a build file help:
