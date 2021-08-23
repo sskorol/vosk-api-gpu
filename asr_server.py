@@ -70,7 +70,10 @@ async def recognize(websocket, path):
                  rec = KaldiRecognizer(model, sample_rate, json.dumps(phrase_list))
             else:
                  rec = KaldiRecognizer(model, sample_rate)
-
+        
+        # Enable word time offsets
+        rec.SetWords(True)
+        
         response, stop = await loop.run_in_executor(pool, process_chunk, rec, message)
         await websocket.send(response)
         if stop: break
