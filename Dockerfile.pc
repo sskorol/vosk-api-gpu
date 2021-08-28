@@ -1,4 +1,7 @@
-FROM nvidia/cuda:11.3.0-devel-ubuntu20.04
+# Check nvidia registry for available suffixes.
+ARG CUDA_TAG=11.3.0-devel-ubuntu20.04
+
+FROM nvidia/cuda:$CUDA_TAG
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -50,7 +53,7 @@ RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 python3 ./setup.py install
 
 RUN echo "[CLEANING UP BUILD RESOURCES] >>>" && \
-	rm -rf /opt/vosk-api && \
+	rm -rf /opt/vosk-api/src/*.o && \
 	rm -rf /opt/kaldi && \
 	rm -rf /root/.cache && \
 	rm -rf /var/lib/apt/lists/*

@@ -1,7 +1,10 @@
-FROM sskorol/vosk-api:0.3.27-pc
+ARG TAG=0.3.30
+
+FROM sskorol/vosk-api:$TAG-pc
 
 RUN mkdir /opt/vosk-server
 COPY ./asr_server.py /opt/vosk-server
+RUN python3 -m pip install --upgrade pip
 RUN pip3 install websockets asyncio
 
 EXPOSE 2700

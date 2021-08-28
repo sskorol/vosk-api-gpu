@@ -2,15 +2,18 @@ version: '3.8'
 
 services:
   vosk:
-    image: sskorol/vosk-server:0.3.27-pc
+    image: sskorol/vosk-server:0.3.30-pc
     networks:
       - ai
     volumes:
       - ./model:/opt/vosk-server/model
     environment:
-      - SAMPLE_RATE=16000
+      - VOSK_SAMPLE_RATE=16000
+      - VOSK_MODEL_PATH=/opt/vosk-server/model
       - PYTHONBUFFERED=1
       - PYTHONENCODING=utf-8
+    ports:
+      - "2700:2700"
     deploy:
       resources:
         reservations:
