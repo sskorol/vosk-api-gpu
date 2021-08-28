@@ -1,6 +1,6 @@
 # Check nvidia registry for available suffixes. 
 ARG TYPE=base
-ARG L4T_VERSION=r32.5.0
+ARG L4T_VERSION=r32.6.1
 
 FROM nvcr.io/nvidia/l4t-$TYPE:$L4T_VERSION
 
@@ -63,7 +63,7 @@ RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 python3 ./setup.py install
 
 RUN echo "[CLEANING UP BUILD RESOURCES] >>>" && \
-	rm -rf /opt/vosk-api && \
+	rm -rf /opt/vosk-api/src/*.o && \
 	rm -rf /opt/kaldi && \
 	rm -rf /root/.cache && \
 	rm -rf /var/lib/apt/lists/*
