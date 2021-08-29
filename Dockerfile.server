@@ -1,6 +1,6 @@
-ARG TAG=0.3.30
+ARG TAG=0.3.30-pc
 
-FROM sskorol/vosk-api:$TAG-pc
+FROM sskorol/vosk-api:$TAG
 
 RUN mkdir /opt/vosk-server
 COPY ./asr_server.py /opt/vosk-server

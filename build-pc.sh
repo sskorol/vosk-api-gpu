@@ -32,4 +32,4 @@ fi
 echo "ARGS: CUDA=$cuda; TAG=$tag"
 
 docker build -f Dockerfile.pc --no-cache -t sskorol/vosk-api:$tag-pc --build-arg CUDA_TAG=$cuda .
-docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$tag-pc --build-arg TAG=$tag .
+docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$tag-pc --build-arg TAG=$tag-pc .
