@@ -36,7 +36,7 @@ ARG TARGET=ARMV8
 ARG VOSK_ARCHITECTURE=aarch64
 ARG VOSK_SOURCE=/opt/vosk-api
 
-RUN echo "[PREPARING_KALDI] >>>" && git clone -b lookahead-1.8.0 --single-branch https://github.com/alphacep/kaldi /opt/kaldi
+RUN echo "[PREPARING_KALDI] >>>" && git clone -b vosk --single-branch https://github.com/alphacep/kaldi /opt/kaldi
 RUN cd /opt/kaldi/tools && \
 	sed -i 's:status=0:exit 0:g' extras/check_dependencies.sh && \
 	sed -i "s:CXXFLAGS = -g -O3 -msse -msse2:CXXFLAGS = -g -O3 -march=$ARCH -mcpu=$CPU:g" Makefile && \
@@ -49,7 +49,7 @@ RUN cd /opt/kaldi/tools && echo \
 	extras/install_openblas_clapack.sh
 
 RUN cd /opt/kaldi/src && \
-	./configure --mathlib=OPENBLAS_CLAPACK --shared && \
+	./configure --mathlib=OPENBLAS_CLAPACK --shared --use-cuda && \
 	sed -i "s: -O1 : -O3 -march=$ARCH :g" kaldi.mk && \
 	echo "[BUILDING KALDI] >>>" && \
 	make -j $(nproc) online2 lm rnnlm
@@ -60,7 +60,7 @@ RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 make -j $(nproc) && \
 	python3 -m pip install --upgrade pip setuptools wheel cython && \
         cd /opt/vosk-api/python && \
-	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 python3 ./setup.py install
+	python3 ./setup.py install
 
 RUN echo "[CLEANING UP BUILD RESOURCES] >>>" && \
 	rm -rf /opt/vosk-api/src/*.o && \

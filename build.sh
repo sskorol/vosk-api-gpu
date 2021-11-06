@@ -3,11 +3,11 @@
 help()
 {
     echo ""
-    echo "Usage: $0 -m nano -i ml -t 0.3.27"
+    echo "Usage: $0 -m nano -i ml -t 0.3.32"
     echo -e "\t-m Jetson board model: nano or xavier (default: xavier)"
     echo -e "\t-i Image type: base or ml (default: base)"
-    echo -e "\t-l L4T version (default: r32.5.0)"
-    echo -e "\t-t Image tag (based on Vosk version: 0.3.27)"
+    echo -e "\t-l L4T version (default: r32.6.1)"
+    echo -e "\t-t Image tag (based on Vosk version: 0.3.32)"
     echo -e "\t-h Show help"
     exit 1
 }
@@ -48,7 +48,7 @@ if [[ "$type" != "base" ]] && [[ "$type" != "ml" ]]; then
 fi
 
 if [[ -z "$version" ]]; then
-    version="r32.5.0"
+    version="r32.6.1"
 fi
 
 if [[ -z "$tag" ]]; then

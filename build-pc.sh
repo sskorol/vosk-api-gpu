@@ -3,9 +3,9 @@
 help()
 {
     echo ""
-    echo "Usage: $0 -c 11.3.0-devel-ubuntu20.04 -t 0.3.30"
+    echo "Usage: $0 -c 11.3.0-devel-ubuntu20.04 -t 0.3.32"
     echo -e "\t-c CUDA image version"
-    echo -e "\t-t Image tag (based on Vosk version: 0.3.30)"
+    echo -e "\t-t Image tag (based on Vosk version: 0.3.32)"
     echo -e "\t-h Show help"
     exit 1
 }
