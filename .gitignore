@@ -1,3 +1,4 @@
 *model*
 .venv
 *.zip
+.env

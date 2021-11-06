@@ -58,4 +58,5 @@ fi
 
 echo "BUILD ARGS: CPU=$cpu; ARCH=$arch; TYPE=$type; L4T_VERSION=$version; TAG=$tag-$model"
 
-docker build -t sskorol/vosk-api:$tag-$model --build-arg CPU=$cpu --build-arg ARCH=$arch --build-arg TYPE=$type --build-arg L4T_VERSION=$version .
+docker build --no-cache -t sskorol/vosk-api:$tag-$model --build-arg CPU=$cpu --build-arg ARCH=$arch --build-arg TYPE=$type --build-arg L4T_VERSION=$version .
+docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$tag-$model --build-arg TAG=$tag-$model .

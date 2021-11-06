@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   vosk:
-    image: sskorol/vosk-server:0.3.32-pc
+    image: sskorol/vosk-server:$TAG
     networks:
       - ai
     volumes:
