@@ -23,9 +23,10 @@ RUN apt-get update && \
 	python3-wheel \
 	python3-cffi \
 	python3-dev \
+    python3-websockets \
 	python3-setuptools \
 	zip \
-	wget && \ 
+	wget && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8 --slave /usr/bin/g++ g++ /usr/bin/g++-8 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
@@ -52,15 +53,16 @@ RUN cd /opt/kaldi/src && \
 	./configure --mathlib=OPENBLAS_CLAPACK --shared --use-cuda && \
 	sed -i "s: -O1 : -O3 -march=$ARCH :g" kaldi.mk && \
 	echo "[BUILDING KALDI] >>>" && \
-	make -j $(nproc) online2 lm rnnlm
+	make -j $(nproc) online2 lm rnnlm cudafeat cudadecoder
 
 RUN echo "[BUILDING VOSK] >>>" && \
-	git clone https://github.com/alphacep/vosk-api.git /opt/vosk-api
+	git clone -b gpu-fix https://github.com/sskorol/vosk-api.git /opt/vosk-api
 RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 make -j $(nproc) && \
 	python3 -m pip install --upgrade pip setuptools wheel cython && \
-        cd /opt/vosk-api/python && \
-	python3 ./setup.py install
+    cd ../python && \
+	python3 ./setup.py bdist_wheel && \
+	cd ./dist && pip3 install vosk-*.whl
 
 RUN echo "[CLEANING UP BUILD RESOURCES] >>>" && \
 	rm -rf /opt/vosk-api/src/*.o && \

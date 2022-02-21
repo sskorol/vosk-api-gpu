@@ -2,12 +2,14 @@ ARG TAG=0.3.32-pc
 
 FROM sskorol/vosk-api:$TAG
 
-RUN mkdir /opt/vosk-server
-COPY ./asr_server.py /opt/vosk-server
+WORKDIR /opt/vosk-server
+
+# Download GPU server
+RUN wget https://raw.githubusercontent.com/alphacep/vosk-server/a02f86f91dbf353ffb67aa41d62498017a21e73f/websocket-gpu-batch/asr_server_gpu.py
+
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install websockets asyncio
 
 EXPOSE 2700
-WORKDIR /opt/vosk-server
 
-CMD ["python3", "./asr_server.py"]
+CMD ["python3", "./asr_server_gpu.py"]

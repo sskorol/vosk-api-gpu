@@ -49,7 +49,7 @@ To build images for PC, use the following script:
 ./build-pc.sh -c 11.3.0-devel-ubuntu20.04 -t 0.3.32
 ```
 
-Here, you have to provide a base cuda image tag and the ouput container's tag. You can read more by running the script with `-h` flag.
+Here, you have to provide a base cuda image tag and the output container's tag. You can read more by running the script with `-h` flag.
 
 This script will build 2 images: base and a sample Vosk server.
 
@@ -66,8 +66,8 @@ Note that you have to download and extract a required [model](https://alphacephe
 
 ### Important notes
 
-- Jetson Nano won't work with latest large model due to high memory requirements (at least 8Gb RAM).
-- Jetson Xavier **will** work with latest large model if you remove `rnnlm` folder from `model`.
+- Jetson Nano won't work with the latest large model due to high memory requirements (at least 8Gb RAM).
+- Jetson Xavier **will** work with the latest large model if you remove `rnnlm` folder from `model`.
 - Make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
 - Your host's CUDA version must match the container's as they share the same runtime. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.0 was used.
 
