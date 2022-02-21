@@ -6,10 +6,9 @@ services:
     networks:
       - ai
     volumes:
-      - ./model:/opt/vosk-server/model
+      - ./model-ru:/opt/vosk-server/model
     environment:
       - VOSK_SAMPLE_RATE=16000
-      - VOSK_MODEL_PATH=/opt/vosk-server/model
       - PYTHONBUFFERED=1
       - PYTHONENCODING=utf-8
     ports:

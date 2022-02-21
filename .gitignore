@@ -2,3 +2,4 @@
 .venv
 *.zip
 .env
+.idea
