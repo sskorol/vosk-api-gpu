@@ -1,4 +1,4 @@
-ARG TAG=0.3.32-pc
+ARG TAG=0.3.37-pc
 
 FROM sskorol/vosk-api:$TAG
 
