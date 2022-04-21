@@ -1,5 +1,5 @@
 *model*
-.venv
+*venv*
 *.zip
 .env
 .idea

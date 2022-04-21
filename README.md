@@ -36,7 +36,7 @@ cd vosk-api-gpu
 Run a build script with the required args depending on your platform, e.g.:
 
 ```shell
-./build.sh -m nano -i ml -t 0.3.32
+./build.sh -m nano -i ml -t 0.3.37
 ```
 
 You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-base) and [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml). 
@@ -46,7 +46,7 @@ You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com
 To build images for PC, use the following script:
 
 ```shell
-./build-pc.sh -c 11.3.0-devel-ubuntu20.04 -t 0.3.32
+./build-pc.sh -c 11.3.0-devel-ubuntu20.04 -t 0.3.37
 ```
 
 Here, you have to provide a base cuda image tag and the output container's tag. You can read more by running the script with `-h` flag.
@@ -70,6 +70,7 @@ Note that you have to download and extract a required [model](https://alphacephe
 - Jetson Xavier **will** work with the latest large model if you remove `rnnlm` folder from `model`.
 - Make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
 - Your host's CUDA version must match the container's as they share the same runtime. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.0 was used.
+- If you plan to use `rnnlm`, make sure you allocated at least 12Gb of RAM to your Docker instance (16Gb is optimal).
 
 ### Testing
 
@@ -89,3 +90,17 @@ Now you can perform a quick test for the RU model with the following script:
 ```
 
 Use your own recording to test it against any other language. 
+
+### Apple M1 Support
+
+To build images (w/o GPU) for Apple M1, use the following script:
+
+```shell
+./build-m1.sh -t 0.3.37
+```
+
+To build Kaldi and Vosk API locally (w/o Docker), use the following script (thanks to @aivoicesystems):
+
+```shell
+./build-m1-local.sh
+```

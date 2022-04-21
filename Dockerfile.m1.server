@@ -1,0 +1,15 @@
+ARG TAG=0.3.37-m1
+
+FROM sskorol/vosk-api:$TAG
+
+WORKDIR /opt/vosk-server
+
+# Download common server
+RUN wget https://raw.githubusercontent.com/alphacep/vosk-server/master/websocket/asr_server.py
+
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install websockets asyncio
+
+EXPOSE 2700
+
+CMD ["python3", "./asr_server.py"]

@@ -39,7 +39,9 @@ ARG VOSK_SOURCE=/opt/vosk-api
 
 RUN echo "[PREPARING_KALDI] >>>" && git clone -b vosk --single-branch https://github.com/alphacep/kaldi /opt/kaldi
 RUN cd /opt/kaldi/tools && \
-	sed -i 's:status=0:exit 0:g' extras/check_dependencies.sh && \
+	sed -i 's:status=0:exit 0:g' extras/check_dependencies.sh
+
+RUN cd /opt/kaldi/tools && \
 	sed -i "s:CXXFLAGS = -g -O3 -msse -msse2:CXXFLAGS = -g -O3 -march=$ARCH -mcpu=$CPU:g" Makefile && \
 	sed -i 's:--enable-ngram-fsts:--enable-ngram-fsts --disable-bin:g' Makefile && \
 	echo "[BUILDING OPENFST] >>>" && \
