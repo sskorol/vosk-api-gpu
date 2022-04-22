@@ -5,7 +5,7 @@ FROM sskorol/vosk-api:$TAG
 WORKDIR /opt/vosk-server
 
 # Download GPU server
-RUN wget https://raw.githubusercontent.com/alphacep/vosk-server/a02f86f91dbf353ffb67aa41d62498017a21e73f/websocket-gpu-batch/asr_server_gpu.py
+RUN wget https://raw.githubusercontent.com/alphacep/vosk-server/master/websocket-gpu-batch/asr_server_gpu.py
 
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install websockets asyncio
