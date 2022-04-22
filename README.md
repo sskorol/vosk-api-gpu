@@ -104,3 +104,9 @@ To build Kaldi and Vosk API locally (w/o Docker), use the following script (than
 ```shell
 ./build-m1-local.sh
 ```
+
+Note that there's a required software check when you start this script. If you see missing requirements, chances are you'll need to install the following packages:
+
+```shell
+brew install autoconf cmake automake libtool
+```
