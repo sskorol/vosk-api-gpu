@@ -1,5 +1,5 @@
 # Check nvidia registry for available suffixes.
-ARG CUDA_TAG=11.3.0-devel-ubuntu20.04
+ARG CUDA_TAG=11.3.1-devel-ubuntu20.04
 
 FROM nvidia/cuda:$CUDA_TAG
 
@@ -46,7 +46,7 @@ RUN cd /opt/kaldi/src && \
 	make -j $(nproc) online2 lm rnnlm cudafeat cudadecoder
 
 RUN echo "[BUILDING VOSK] >>>" && \
-	git clone -b gpu-fix https://github.com/sskorol/vosk-api.git /opt/vosk-api
+	git clone https://github.com/alphacep/vosk-api /opt/vosk-api
 RUN cd /opt/vosk-api/src && \
 	KALDI_ROOT=/opt/kaldi HAVE_CUDA=1 make -j $(nproc) && \
 	python3 -m pip install --upgrade pip setuptools wheel cython && \
