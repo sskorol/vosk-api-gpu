@@ -46,7 +46,7 @@ You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com
 To build images for PC, use the following script:
 
 ```shell
-./build-pc.sh -c 11.3.0-devel-ubuntu20.04 -t 0.3.37
+./build-pc.sh -c 11.3.1-devel-ubuntu20.04 -t 0.3.37
 ```
 
 Here, you have to provide a base cuda image tag and the output container's tag. You can read more by running the script with `-h` flag.
@@ -69,8 +69,12 @@ Note that you have to download and extract a required [model](https://alphacephe
 - Jetson Nano won't work with the latest large model due to high memory requirements (at least 8Gb RAM).
 - Jetson Xavier **will** work with the latest large model if you remove `rnnlm` folder from `model`.
 - Make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
-- Your host's CUDA version must match the container's as they share the same runtime. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.0 was used.
+- Your host's CUDA version must match the container's as they share the same runtime. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.1 was used.
 - If you plan to use `rnnlm`, make sure you allocated at least 12Gb of RAM to your Docker instance (16Gb is optimal).
+- In case of GCP usage, there's a know issue with K80 instance. Seems like it has an outdated architecture. So it's recommended to take at least NVIDIA P4.
+- Not all the models are adopted for GPU-usage, e.g. in RU model, you have to manualy patch configs to make it work:
+  - remove `min-active` flag from `model/conf/model.conf`
+  - copy/paste `ivector.conf` from big EN model
 
 ### Testing
 
