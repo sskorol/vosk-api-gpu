@@ -30,6 +30,4 @@ resource "google_compute_instance" "default" {
   metadata = {
     install-nvidia-driver = "True"
   }
-
-  metadata_startup_script = "git clone https://github.com/sskorol/vosk-api-gpu.git /tmp/vosk"
 }
