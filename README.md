@@ -36,7 +36,7 @@ cd vosk-api-gpu
 Run a build script with the required args depending on your platform, e.g.:
 
 ```shell
-./build.sh -m nano -i ml -t 0.3.37
+cd jetson && ./build.sh -m nano -i ml -t 0.3.37
 ```
 
 You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-base) and [here](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml). 
@@ -46,23 +46,71 @@ You can check the available NVIDIA base image tags [here](https://ngc.nvidia.com
 To build images for PC, use the following script:
 
 ```shell
-./build-pc.sh -c 11.3.1-devel-ubuntu20.04 -t 0.3.37
+cd pc && ./build.sh -c 11.3.1-devel-ubuntu20.04 -t 0.3.37
 ```
 
 Here, you have to provide a base cuda image tag and the output container's tag. You can read more by running the script with `-h` flag.
 
 This script will build 2 images: base and a sample Vosk server.
 
-### Running
+#### Apple M1
 
-- As you can reuse a `docker-compose.yml` both for Jetson boards and PCs, it's required to manually set the image tag. Either modify a compose file directly or create a `.env` file with a `TAG=X.X.X` version.
-- To start a newly built container, run the following command:
+To build images (w/o GPU) for Apple M1, use the following script:
 
 ```shell
-docker-compose up -d
+cd m1 && ./build.sh -t 0.3.37
 ```
 
-Note that you have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder first.
+To build Kaldi and Vosk API locally (w/o Docker), use the following script (thanks to @aivoicesystems):
+
+```shell
+cd m1 && ./build-local.sh
+```
+
+Note that there's a required software check when you start this script. If you see missing requirements, chances are you'll need to install the following packages:
+
+```shell
+brew install autoconf cmake automake libtool
+```
+
+#### GCP
+
+To test images on GCP with NVIDIA Tesla T4, use the following steps:
+
+- Install [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- Create a new project on GCP
+- Install and init [gcloud-cli](https://cloud.google.com/sdk/docs/install-sdk)
+- Deploy a new Compute Engine instance with the following commands:
+
+```shell
+cd gcp && terraform init && terraform apply
+```
+
+Note that you'll be prompted to type your GCP project name. When a new instance is deployed, you can now ssh to it:
+
+```shell
+gcloud compute ssh --project $PROJECT_NAME --zone us-central1-a gpu
+```
+
+Deployment script automatically clones this repository to `/tmp` folder. Now you can build Vosk images on a relatively powerful machine:
+
+```shell
+cd /tmp/vosk-api-gpu/gcp && ./build.sh
+```
+
+Note that some variables are hardcoded at the moment. Feel free to change them if you want.
+
+### Running
+
+The following script will start docker-compose, install requirements and run a simple test:
+
+```shell
+./test.sh $TAG
+```
+
+- Pass a newly built image tag as an argument.
+- You have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder first, unless you use a GCP instance.
+- Use your own recording to test it against any other language than RU.
 
 ### Important notes
 
@@ -71,46 +119,7 @@ Note that you have to download and extract a required [model](https://alphacephe
 - Make sure you have at least Docker (20.10.6) and Compose (1.29.1) versions.
 - Your host's CUDA version must match the container's as they share the same runtime. Jetson images were built with CUDA 10.1. As per the desktop version: CUDA 11.3.1 was used.
 - If you plan to use `rnnlm`, make sure you allocated at least 12Gb of RAM to your Docker instance (16Gb is optimal).
-- In case of GCP usage, there's a know issue with K80 instance. Seems like it has an outdated architecture. So it's recommended to take at least NVIDIA P4.
-- Not all the models are adopted for GPU-usage, e.g. in RU model, you have to manualy patch configs to make it work:
+- In case of GCP usage, there's a know issue with K80 instance. Seems like it has an outdated architecture. So it's recommended to take at least NVIDIA T4.
+- Not all the models are adopted for GPU-usage, e.g. in RU model, you have to manually patch configs to make it work (it's done automatically for GCP instance):
   - remove `min-active` flag from `model/conf/model.conf`
   - copy/paste `ivector.conf` from big EN model
-
-### Testing
-
-First, install the required dependencies:
-
-```shell
-python3 -m venv .venv
-source .venv/bin/activate
-pip3 install pip --upgrade
-pip3 install websockets asyncio
-```
-
-Now you can perform a quick test for the RU model with the following script:
-
-```shell
-./test.py weather.wav
-```
-
-Use your own recording to test it against any other language. 
-
-### Apple M1 Support
-
-To build images (w/o GPU) for Apple M1, use the following script:
-
-```shell
-./build-m1.sh -t 0.3.37
-```
-
-To build Kaldi and Vosk API locally (w/o Docker), use the following script (thanks to @aivoicesystems):
-
-```shell
-./build-m1-local.sh
-```
-
-Note that there's a required software check when you start this script. If you see missing requirements, chances are you'll need to install the following packages:
-
-```shell
-brew install autoconf cmake automake libtool
-```

@@ -23,6 +23,7 @@ fi
 
 echo "ARGS: TAG=$tag"
 BUILD_TAG="$tag-m1"
+echo "TAG=$BUILD_TAG" > .env
 
-docker build -f Dockerfile.m1 --no-cache -t sskorol/vosk-api:$BUILD_TAG .
-docker build -f Dockerfile.m1.server --no-cache -t sskorol/vosk-server:$BUILD_TAG --build-arg TAG=$BUILD_TAG .
+docker build --no-cache -t sskorol/vosk-api:$BUILD_TAG .
+docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$BUILD_TAG --build-arg TAG=$BUILD_TAG .

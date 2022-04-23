@@ -32,6 +32,7 @@ if [[ -z "$tag" ]]; then
 fi
 
 echo "ARGS: CUDA=$cuda; TAG=$tag"
+BUILD_TAG="$tag-pc"
 
-docker build -f Dockerfile.pc --no-cache -t sskorol/vosk-api:$tag-pc --build-arg CUDA_TAG=$cuda .
-docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$tag-pc --build-arg TAG=$tag-pc .
+docker build --no-cache -t sskorol/vosk-api:$BUILD_TAG --build-arg CUDA_TAG=$cuda .
+docker build -f Dockerfile.server --no-cache -t sskorol/vosk-server:$BUILD_TAG --build-arg TAG=$BUILD_TAG .
