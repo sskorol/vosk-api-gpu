@@ -92,10 +92,10 @@ Note that you'll be prompted to type your GCP project name. When a new instance 
 gcloud compute ssh --project $PROJECT_NAME --zone us-central1-a gpu
 ```
 
-Deployment script automatically clones this repository to `/tmp` folder. Now you can build Vosk images on a relatively powerful machine:
+Clone this repo and build Vosk images on a relatively powerful machine:
 
 ```shell
-cd /tmp/vosk-api-gpu/gcp && ./build.sh
+git clone https://github.com/sskorol/vosk-api-gpu && cd vosk-api-gpu/gcp && ./build.sh
 ```
 
 Note that some variables are hardcoded at the moment. Feel free to change them if you want.
