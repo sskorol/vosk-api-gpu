@@ -1,9 +1,51 @@
 #!/bin/bash
 
-TAG=0.3.37
-CUDA_IMAGE=11.3.1-devel-ubuntu20.04
-MODEL_NAME=vosk-model-ru-0.22
-MODEL_ARCHIVE="$MODEL_NAME.zip"
+help()
+{
+    echo ""
+    nvcc -V
+    echo ""
+    echo "Usage: $0 -c 11.3.1-devel-ubuntu20.04 -t 0.3.37"
+    echo -e "\t-c CUDA image version, e.g. 11.3.1-devel-ubuntu20.04"
+    echo -e "\t-t Image tag, based on Vosk version, e.g. 0.3.37"
+    echo -e "\t-m Model name, based on https://alphacephei.com/vosk/models, e.g. vosk-model-en-us-0.22"
+    echo -e "\t-p If set, patch the model for GPU support (e.g. EN model is already patched, RU is not)"
+    echo -e "\t-h Show help"
+    exit 1
+}
+
+while getopts "c:t:m:ph" opt
+do
+    case "$opt" in
+      c) cuda="$OPTARG" ;;
+      t) tag="$OPTARG" ;;
+      m) model="$OPTARG" ;;
+      p) patch='true' ;;
+      h | ?) help ;;
+    esac
+done
+
+if [[ -z "$cuda" ]]; then
+    echo "CUDA version is mandatory"
+    help
+fi
+
+if [[ -z "$tag" ]]; then
+    echo "Image tag is mandatory"
+    help
+fi
+
+if [[ -z "$model" ]]; then
+    echo "Model name is mandatory"
+    help
+fi
+
+if [[ -z "$patch" ]]; then
+    patch='false'
+fi
+
+echo "ARGS: CUDA=$cuda; TAG=$tag; MODEL=$model"
+model_archive="$model.zip"
 
 # Install docker-compose
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -26,11 +68,13 @@ EOT
 sudo systemctl restart docker
 
 # Patch model
-cd ../ && wget "https://alphacephei.com/vosk/models/$MODEL_ARCHIVE" \
-  && unzip $MODEL_ARCHIVE \
-  && rm -f $MODEL_ARCHIVE \
-  && mv $MODEL_NAME model \
-  && sed -i '1d' ./model/conf/model.conf \
+cd ../ && wget "https://alphacephei.com/vosk/models/$model_archive" \
+  && unzip "$model_archive" \
+  && rm -f "$model_archive" \
+  && mv "$model" model
+
+if [[ "$patch" == 'true' ]]; then
+  sed -i '1d' ./model/conf/model.conf \
   && cat <<EOT >> ./model/conf/ivector.conf
 --cmvn-config=model/ivector/online_cmvn.conf
 --ivector-period=10
@@ -43,6 +87,7 @@ cd ../ && wget "https://alphacephei.com/vosk/models/$MODEL_ARCHIVE" \
 --min-post=0.025
 --posterior-scale=0.1
 EOT
+fi
 
 # Build Vosk API and server
-cd pc && ./build.sh -c $CUDA_IMAGE -t $TAG
+cd pc && ./build.sh -c "$cuda" -t "$tag"

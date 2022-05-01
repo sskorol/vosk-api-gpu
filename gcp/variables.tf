@@ -7,7 +7,7 @@ variable "machine" {
 }
 
 variable "zone" {
-  default = "us-central1-a"
+  type = string
 }
 
 variable "disk_size" {

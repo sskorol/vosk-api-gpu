@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TAG=${1:-latest}
+WAV=${2:-weather.wav}
 
 echo "TAG=$TAG" > .env \
   && docker-compose up -d \
@@ -9,6 +10,6 @@ echo "TAG=$TAG" > .env \
   && pip3 install pip --upgrade \
   && pip3 install asyncio websockets \
   && sleep 10 \
-  && ./test.py weather.wav \
+  && ./test.py "$WAV" \
   && deactivate \
   && docker-compose down

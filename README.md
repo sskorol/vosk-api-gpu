@@ -53,18 +53,12 @@ Here, you have to provide a base cuda image tag and the output container's tag. 
 
 This script will build 2 images: base and a sample Vosk server.
 
-#### PC Windows 11 + WSL2
-1. Followed the instructions at https://docs.docker.com/desktop/windows/wsl/ to install Docker Desktop and make sure the WSL 2 backend is enabled.
+#### Windows 11 with WSL2
 
-2. Use the following command line test to confirm that the WSL2 GPU environment is working.
-```shell
-docker run --rm -it --gpus=all nvcr.io/nvidia/k8s/cuda-sample:nbody nbody -gpu -benchmark
-```
-3. Prepare an English voice wav in ./vosk-api-gpu/weather.wav  
-Prepare the english model in ./vosk-api-gpu/model
-```shell
-./test.sh 0.3.37-pc
-```
+- Follow the official [instructions](https://docs.docker.com/desktop/windows/wsl) to install Docker Desktop.
+- Make sure you fully accomplished the [GPU part](https://docs.docker.com/desktop/windows/wsl/#gpu-support) of the above guide.
+- Either use an existing image or build a new one following [PCs](https://github.com/sskorol/vosk-api-gpu#pcs) part of this README.
+- Follow the [Running](https://github.com/sskorol/vosk-api-gpu#running) part of this README to test your recording.
 
 #### Apple M1
 
@@ -98,32 +92,32 @@ To test images on GCP with NVIDIA Tesla T4, use the following steps:
 ```shell
 cd gcp && terraform init && terraform apply
 ```
-
-Note that you'll be prompted to type your GCP project name. When a new instance is deployed, you can now ssh to it:
+Note that you'll be prompted to type your GCP project name and zone. When a new instance is deployed, you can now ssh to it:
 
 ```shell
-gcloud compute ssh --project $PROJECT_NAME --zone us-central1-a gpu
+gcloud compute ssh --project $PROJECT_NAME --zone $ZONE gpu
 ```
 
 Clone this repo and build Vosk images on a relatively powerful machine:
 
 ```shell
-git clone https://github.com/sskorol/vosk-api-gpu && cd vosk-api-gpu/gcp && ./build.sh
+git clone https://github.com/sskorol/vosk-api-gpu && cd vosk-api-gpu/gcp
+./build.sh -c 11.3.1-devel-ubuntu20.04 -t 0.3.37 -m vosk-model-en-us-0.22
 ```
 
-Note that some variables are hardcoded at the moment. Feel free to change them if you want.
+See build script's help for more details regarding input arguments.
 
 ### Running
 
 The following script will start docker-compose, install requirements and run a simple test:
 
 ```shell
-./test.sh $TAG
+./test.sh $TAG $WAV_FILE
 ```
 
 - Pass a newly built image tag as an argument.
 - You have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder first, unless you use a GCP instance.
-- Use your own recording to test it against any other language than RU.
+- Pass your own recording as a second argument. `weather.wav` (RU) is used by default.
 
 ### Important notes
 
