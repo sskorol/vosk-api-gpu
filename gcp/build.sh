@@ -5,7 +5,7 @@ help()
     echo ""
     nvcc -V
     echo ""
-    echo "Usage: $0 -c 11.3.1-devel-ubuntu20.04 -t 0.3.37"
+    echo "Usage: $0 -c 11.3.1-devel-ubuntu20.04 -t 0.3.37 -m vosk-model-en-us-0.22"
     echo -e "\t-c CUDA image version, e.g. 11.3.1-devel-ubuntu20.04"
     echo -e "\t-t Image tag, based on Vosk version, e.g. 0.3.37"
     echo -e "\t-m Model name, based on https://alphacephei.com/vosk/models, e.g. vosk-model-en-us-0.22"
