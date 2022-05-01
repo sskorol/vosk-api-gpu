@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TAG=${1:-latest}
-WAV=${2:-weather.wav}
+WAV=${2:-en.wav}
 
 echo "TAG=$TAG" > .env \
   && docker-compose up -d \
