@@ -117,7 +117,7 @@ The following script will start docker-compose, install requirements and run a s
 
 - Pass a newly built image tag as an argument.
 - You have to download and extract a required [model](https://alphacephei.com/vosk/models) into `./model` folder first, unless you use a GCP instance.
-- Pass your own recording as a second argument. `weather.wav` (RU) is used by default.
+- Pass your own recording as a second argument. `en.wav` is used by default.
 
 ### Important notes
 
