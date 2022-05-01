@@ -53,6 +53,19 @@ Here, you have to provide a base cuda image tag and the output container's tag. 
 
 This script will build 2 images: base and a sample Vosk server.
 
+#### PC Windows 11 + WSL2
+1. Followed the instructions at https://docs.docker.com/desktop/windows/wsl/ to install Docker Desktop and make sure the WSL 2 backend is enabled.
+
+2. Use the following command line test to confirm that the WSL2 GPU environment is working.
+```shell
+docker run --rm -it --gpus=all nvcr.io/nvidia/k8s/cuda-sample:nbody nbody -gpu -benchmark
+```
+3. Prepare an English voice wav in ./vosk-api-gpu/weather.wav  
+Prepare the english model in ./vosk-api-gpu/model
+```shell
+./test.sh 0.3.37-pc
+```
+
 #### Apple M1
 
 To build images (w/o GPU) for Apple M1, use the following script:
