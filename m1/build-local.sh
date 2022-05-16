@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 prog=$(basename "$0")
 
+ARCH='armv8.5-a'
+CPU='lightning'
+TARGET='NEOVERSEN1'
 BUILD_IN='/tmp'
+
 if [ $# -gt 0 ]; then
   BUILD_IN="$1"
   shift
@@ -9,7 +13,6 @@ fi
 
 case $(uname -s) in
 Darwin) ;;
-
 *)
   echo "${prog}: this script is designed for MacOS (Darwin)" >&2
   exit 1
@@ -45,7 +48,6 @@ fi
 nproc=$(sysctl -n hw.physicalcpu)
 
 cd "${BUILD_ROOT}"
-
 exec 3>&1
 
 say() {
@@ -62,10 +64,10 @@ say() {
 
   say 'Cloning tools/OpenBLAS...'
   cd kaldi/tools
-  git clone -b v0.3.13 --single-branch https://github.com/xianyi/OpenBLAS
+  git clone -b v0.3.20 --single-branch https://github.com/xianyi/OpenBLAS
 
   say 'Compiling tools/OpenBLAS...'
-  make -C OpenBLAS ONLY_CBLAS=1 DYNAMIC_ARCH=1 TARGET=NEHALEM USE_LOCKING=1 USE_THREAD=0 all
+  make -C OpenBLAS ONLY_CBLAS=1 DYNAMIC_ARCH=1 TARGET="${TARGET}" USE_LOCKING=1 USE_THREAD=0 all
   make -C OpenBLAS PREFIX="$(pwd)"/OpenBLAS/install install
   cd ../..
 
@@ -82,7 +84,7 @@ say() {
   #include <stdio.h>
 EOF
   sed -f /tmp/patch -i .bak ../BLAS/SRC/xerbla.c
-  make -j ${nproc}
+  make -j "${nproc}"
 
   say 'Installing in OpenBLAS...'
   find . -name '*.a' -exec cp {} ../../OpenBLAS/install/lib \;
@@ -95,35 +97,40 @@ EOF
   say 'Compiling tools/openfst...'
   cd openfst
   autoreconf -i
-  CFLAGS='-g -O3' ./configure --prefix "$(pwd)" --enable-static --enable-shared --enable-far --enable-ngram-fsts --enable-lookahead-fsts --with-pic --disable-bin
-  make -j ${nproc}
+  CFLAGS="-g -O3 -march=${ARCH} -mcpu=${CPU}" ./configure --prefix "$(pwd)" \
+    --enable-static \
+    --enable-shared \
+    --enable-far \
+    --enable-ngram-fsts \
+    --enable-lookahead-fsts \
+    --with-pic \
+    --disable-bin
+  make -j "${nproc}"
   make install
   cd ../../..
 
   say 'Compiling kaldi...'
   cd kaldi/src
   ./configure --mathlib=OPENBLAS_CLAPACK --shared --use-cuda=no
-  #sed -i .bak 's:-msse -msse2:-msse -msse2:g' kaldi.mk
-  sed -i .bak 's: -O1 : -O3 :g' kaldi.mk
-  make -j ${nproc} online2 lm rnnlm
+  sed -i .bak "s: -O1 : -O3 -march=${ARCH} :g" kaldi.mk
+  make -j "${nproc}" online2 lm rnnlm
   cd ../..
 
-  say 'Cleaning up'
+  say 'Cleaning up...'
   cd kaldi
   find . -name '*.o' -exec rm {} \;
   cd ..
 
-  say 'Cloning vosk-api'
+  say 'Cloning vosk-api...'
   rm -fr vosk-api
   git clone https://github.com/alphacep/vosk-api
 
-  say 'Compiling vosk-api'
+  say 'Compiling vosk-api...'
   cd vosk-api/src
-  sed -i .bak 's/ -latomic//' Makefile
-  EXT=dyld KALDI_ROOT=../../kaldi make -j ${nproc}
+  EXT=dyld KALDI_ROOT=../../kaldi make -j "${nproc}"
   cp libvosk.dyld ../..
 
-  say 'Building vosk-api python module'
+  say 'Building vosk-api python module...'
   cd ../python
   python3 setup.py install
 
@@ -135,8 +142,6 @@ if [ $? -ne 0 ]; then
   echo "Full log is in $(pwd)/build.log"
   exit 1
 fi
-
-rm -fr kaldi vosk-api build.log
 
 echo 'Build successful'
 dylib="$(pwd)/libvosk.dyld"

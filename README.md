@@ -80,6 +80,10 @@ Note that there's a required software check when you start this script. If you s
 brew install autoconf cmake automake libtool
 ```
 
+Also note that this script installs Vosk API globally. If you want to use it for a specific project, just activate virtual env before running the script.
+
+```shell
+
 #### GCP
 
 To test images on GCP with NVIDIA Tesla T4, use the following steps:
